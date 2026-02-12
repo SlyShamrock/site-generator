@@ -1,3 +1,5 @@
+import re
+
 from enum import Enum
 from htmlnode import LeafNode
 
@@ -43,3 +45,12 @@ def text_node_to_html_node(text_node):
         return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
     else:
         raise Exception("Invalid Type")
+
+def extract_markdown_images(text):
+    matched_text = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return matched_text                         
+
+def extract_markdown_links(text):
+    matched_text = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return matched_text          
+
