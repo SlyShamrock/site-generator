@@ -1,5 +1,4 @@
-from htmlnode import HTMLNode, LeafNode, ParentNode
-from textnode import TextNode, TextType, text_node_to_html_node, extract_markdown_images, extract_markdown_links
+from textnode import TextNode, TextType, extract_markdown_images, extract_markdown_links
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
@@ -73,3 +72,12 @@ def split_nodes_link(old_nodes):
             leftover = TextNode(remaining_text, TextType.TEXT)    
             new_nodes.append(leftover)       
     return new_nodes
+
+def text_to_textnodes(text):
+    node = [TextNode(text, TextType.TEXT)]
+    node = split_nodes_image(node)
+    node = split_nodes_link(node)
+    node = split_nodes_delimiter(node, "**", TextType.BOLD)
+    node = split_nodes_delimiter(node, "_", TextType.ITALIC)
+    node = split_nodes_delimiter(node, "`", TextType.CODE)
+    return node

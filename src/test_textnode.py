@@ -72,7 +72,8 @@ class TestTextNode(unittest.TestCase):
 
     def test_extract_markdown_links_exclude_image(self):
         matches = extract_markdown_links("This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)")
-        self.assertListEqual([], matches)
-  
+        self.assertListEqual([], matches)  
+
+      
 if __name__== "__main__":
     unittest.main()
