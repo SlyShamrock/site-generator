@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from split_nodes import split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
+from split_nodes import split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks
 
 class TestSplitNodes(unittest.TestCase):
     def test_delimiter_code(self):
@@ -111,6 +111,45 @@ class TestSplitNodes(unittest.TestCase):
                     TextNode(" and a ", TextType.TEXT),
                     TextNode("link", TextType.LINK, "https://boot.dev"),]
         self.assertListEqual(expected, actual)
+
+
+    def test_markdown_to_blocks(self):
+        text = """This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items"""
+        blocks = markdown_to_blocks(text)
+        self.assertEqual(blocks, [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
+      
+    def test_markdown_extra_newlines(self):
+        text = """This is **bolded** paragraph
+
+
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+
+
+
+
+- This is a list
+- with items"""
+        blocks = markdown_to_blocks(text)
+        self.assertEqual(blocks, [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
 
     if __name__== "__main__":
         unittest.main()
