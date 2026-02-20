@@ -1,5 +1,4 @@
-import re
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import ParentNode
 from enum import Enum
 from split_nodes import markdown_to_blocks, text_to_textnodes
 from textnode import text_node_to_html_node, TextNode, TextType

@@ -1,9 +1,11 @@
 from textnode import TextNode
 from textnode import TextType
+from static import copy_content
+from generate import generate_pages_recursive
 
 def main():
-    node = TextNode("some text here", TextType.LINK, "https://www.bootdev.com")
-    print(node)
-
+    copy_content("static", "public")
+    generate_pages_recursive("content", "template.html", "public")
+    
 main()
 
