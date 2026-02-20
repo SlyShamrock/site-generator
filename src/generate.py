@@ -10,7 +10,7 @@ def extract_title(markdown):
             return line[2:].strip()
     raise ValueError("No title found")                          
     
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     from_markdown = open(from_path, "r")
     from_contents = from_markdown.read() 
@@ -22,24 +22,25 @@ def generate_page(from_path, template_path, dest_path):
     html_string = source_html.to_html()
     title = extract_title(from_contents)
     replace_placeholders = template_contents.replace("{{ Title }}", title).replace("{{ Content }}", html_string)
+    basepath_replace = replace_placeholders.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
     exists = os.path.dirname(dest_path)
     if exists != "":
         os.makedirs(exists, exist_ok=True)
     final_contents = open(dest_path, "w")
-    final_contents.write(replace_placeholders)
+    final_contents.write(basepath_replace)
     final_contents.close()
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     directory_list = os.listdir(dir_path_content)
     for path in directory_list:
         source_path = os.path.join(dir_path_content, path)
         destination_path = os.path.join(dest_dir_path, path)
         if os.path.isdir(source_path):
             os.makedirs(destination_path, exist_ok=True)
-            generate_pages_recursive(source_path, template_path, destination_path)
+            generate_pages_recursive(source_path, template_path, destination_path, basepath)
         elif os.path.isfile(source_path) and source_path.endswith(".md"):
             dest_filename = str(Path(destination_path).with_suffix(".html"))            
-            generate_page(source_path, template_path, dest_filename)
+            generate_page(source_path, template_path, dest_filename, basepath)
         else:
             continue
 
